@@ -2,7 +2,7 @@ defmodule CamelupWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", CamelupWeb.RoomChannel
+  channel "games:*", CamelupWeb.GameChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -15,9 +15,15 @@ defmodule CamelupWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
+
+  transport(:websocket, Phoenix.Transports.WebSocket,
+    check_origin: ["https://camelup.now.sh/", "//localhost"]
+  )
+
   @impl true
   def connect(_params, socket, _connect_info) do
-    {:ok, socket}
+    uuid = :rand.uniform(1_000_000)
+    {:ok, assign(socket, :user_id, uuid)}
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

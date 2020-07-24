@@ -48,4 +48,5 @@ defmodule CamelupWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug CamelupWeb.Router
+  plug CORSPlug, origin: ~r/.*/
 end

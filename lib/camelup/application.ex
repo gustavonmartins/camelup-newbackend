@@ -6,6 +6,8 @@ defmodule Camelup.Application do
   use Application
 
   def start(_type, _args) do
+    :ets.new(:game_cache, [:public, :named_table])
+
     children = [
       # Start the Telemetry supervisor
       CamelupWeb.Telemetry,
