@@ -1,7 +1,7 @@
 defmodule Camelup.GameTableTest do
   use ExUnit.Case, async: true
   alias CamelUp.{GameTable, GameTableCase, GameTablePrivateView}
-  doctest GameTable
+  doctest CamelUp.GameTable
 
   describe "See if round robbin works" do
     setup do

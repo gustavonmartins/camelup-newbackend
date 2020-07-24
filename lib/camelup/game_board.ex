@@ -13,8 +13,21 @@ defmodule CamelUp.GameBoard do
             final_winner_bets: [],
             final_looser_bets: []
 
+  @type t :: %__MODULE__{
+          state: atom(),
+          dice: integer(),
+          finished: boolean(),
+          camels: list(),
+          throwndices: list(),
+          bets_avaiable: list(),
+          current_tile_bonus: any(),
+          final_winner_bets: list(),
+          final_looser_bets: list()
+        }
+
   alias CamelUp.GameBoard
 
+  @spec action(CamelUp.GameBoard.t(), any()) :: CamelUp.GameBoard.t()
   def action(%GameBoard{} = game_board, msg) do
     case {msg, game_board} do
       {:warmup, %GameBoard{state: :q0, dice: dice, finished: false} = oldstate} ->
@@ -183,12 +196,12 @@ defmodule CamelUp.GameBoard do
         }
 
       {:got_leg_money, %GameBoard{state: :q6} = oldstate} ->
-        %{
+        %GameBoard{
           oldstate
           | state: :q3,
-            dice: nil,
-            throwndices: nil,
-            bets_avaiable: nil
+            dice: [],
+            throwndices: [],
+            bets_avaiable: []
         }
 
       {:got_final_winner_money, %GameBoard{state: :q3} = oldstate} ->

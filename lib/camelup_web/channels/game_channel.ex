@@ -59,6 +59,7 @@ defmodule CamelupWeb.GameChannel do
         "shake" -> :shake
         "got_leg_money" -> :got_leg_money
         "bet_on_leg" -> :bet_on_leg
+        "got_final_winner_money" -> :got_final_winner_money
       end
 
     [{:main, %GameSaloon{} = gs}] = :ets.lookup(:game_cache, :main)
