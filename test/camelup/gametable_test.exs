@@ -1,6 +1,6 @@
 defmodule Camelup.GameTableTest do
   use ExUnit.Case, async: true
-  alias CamelUp.{GameTable, GameTableCase, GameTablePrivateView}
+  alias CamelUp.{GameTable, GameTableCase, GameTablePrivateView, GameBoardCase}
   doctest CamelUp.GameTable
 
   describe "See if round robbin works" do
@@ -184,7 +184,7 @@ defmodule Camelup.GameTableTest do
 
     test "Getting leg money cannot decrease anoybodies money", context do
       gt_before = context.gametable
-      gt_after = GameTable.action(gt_before, :got_leg_money)
+      gt_after = GameTable.action(gt_before, :get_leg_money)
 
       assert gt_after.playersmoney.ana >= gt_before.playersmoney.bob
       assert gt_after.playersmoney.bob >= gt_before.playersmoney.bob
@@ -195,7 +195,7 @@ defmodule Camelup.GameTableTest do
 
     test "Getting leg money restores amount of throwndices to 0", context do
       assert 0 =
-               length(GameTable.action(context.gametable, :got_leg_money).game_board.throwndices)
+               length(GameTable.action(context.gametable, :get_leg_money).game_board.throwndices)
     end
   end
 
@@ -1019,7 +1019,7 @@ defmodule Camelup.GameTableTest do
         | game_board: %{
             gt.game_board
             | camels: [{17, [:red, :orange, :green, :blue, :black]}],
-              state: :q3,
+              state: :q4,
               finished: true
           }
       }
@@ -1128,6 +1128,21 @@ defmodule Camelup.GameTableTest do
         |> Jason.decode()
 
       assert refMap == wannaBe
+    end
+  end
+
+  describe "Communication to game board regarding transitions" do
+    test "From finished race onwards" do
+      gt =
+        %GameTable{game_board: GameBoardCase.shake_to_finish()}
+        |> GameTable.action(:get_leg_money)
+        |> GameTable.action(:get_final_winner_money)
+
+      assert gt.game_board.state == :q4
+      gt = gt |> GameTable.action(:get_final_looser_money)
+
+      # TODO: Stop hardcoding it to a state name, and test for possible transitions as in gboard
+      assert gt.game_board.state == :q5
     end
   end
 end

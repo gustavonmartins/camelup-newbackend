@@ -187,7 +187,7 @@ defmodule CamelUp.GameBoard do
       {:got_leg_money, %GameBoard{state: :q2} = oldstate} ->
         throwndices = []
 
-        %{
+        %GameBoard{
           oldstate
           | state: :q1,
             dice: 5 - length(throwndices),
@@ -199,16 +199,16 @@ defmodule CamelUp.GameBoard do
         %GameBoard{
           oldstate
           | state: :q3,
-            dice: [],
+            dice: 0,
             throwndices: [],
             bets_avaiable: []
         }
 
       {:got_final_winner_money, %GameBoard{state: :q3} = oldstate} ->
-        %{oldstate | state: :q4}
+        %GameBoard{oldstate | state: :q4}
 
       {:got_final_looser_money, %GameBoard{state: :q4} = oldstate} ->
-        %{oldstate | state: :q5}
+        %GameBoard{oldstate | state: :q5}
     end
   end
 

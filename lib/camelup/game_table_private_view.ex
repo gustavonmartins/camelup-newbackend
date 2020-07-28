@@ -16,7 +16,7 @@ defmodule CamelUp.GameTablePrivateView do
   @doc ~S"""
   #Example
   iex> 1+1  
-  22
+  2
   """
   def to_view(%GameTable{} = game_table, char) do
     %CamelUp.GameTablePrivateView{}

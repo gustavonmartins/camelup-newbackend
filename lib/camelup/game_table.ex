@@ -139,15 +139,27 @@ defmodule CamelUp.GameTable do
           bet_on_finals(game_table, :looser, color)
 
         {:get_final_winner_money, %GameTable{}} ->
-          calculatefinallegsmoney(:winner, game_table)
+          gt_base = calculatefinallegsmoney(:winner, game_table)
+          gb = gt_base.game_board |> GameBoard.action(:got_final_winner_money)
+
+          %GameTable{
+            gt_base
+            | game_board: gb
+          }
 
         {:get_final_looser_money, %GameTable{}} ->
-          calculatefinallegsmoney(:looser, game_table)
+          gt_base = calculatefinallegsmoney(:looser, game_table)
+          gb = gt_base.game_board |> GameBoard.action(:got_final_looser_money)
+
+          %GameTable{
+            gt_base
+            | game_board: gb
+          }
 
         {msg, %GameTable{}} ->
           gb = GameBoard.action(game_table.game_board, msg)
 
-          if Enum.member?([:warmup, :start, :got_leg_money], msg) do
+          if Enum.member?([:warmup, :start], msg) do
             %GameTable{game_table | game_board: gb}
           end
       end
