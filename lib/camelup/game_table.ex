@@ -9,10 +9,6 @@ defmodule CamelUp.GameTable do
             playersbet: %{},
             finalbets_avaiable: %{}
 
-  def testgleam() do
-    :gleam_test.add(2, 3)
-  end
-
   def privaction(%GameTable{} = game_table, msg) do
     case {msg, game_table} do
       {:getnextchar, %GameTable{} = oldstate} ->

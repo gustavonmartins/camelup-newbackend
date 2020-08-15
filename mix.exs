@@ -7,7 +7,7 @@ defmodule Camelup.MixProject do
       version: "0.1.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:gleam, :phoenix, :gettext] ++ Mix.compilers(),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       erlc_paths: ["src", "gen"],
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -42,8 +42,6 @@ defmodule Camelup.MixProject do
       {:jason, "~> 1.0"},
       {:cors_plug, "~> 2.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
-      {:mix_gleam, "~> 0.1.0"}
     ]
   end
 
