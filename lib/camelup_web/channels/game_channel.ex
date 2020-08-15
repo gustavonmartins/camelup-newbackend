@@ -2,8 +2,6 @@ defmodule CamelupWeb.GameChannel do
   use CamelupWeb, :channel
   alias CamelUp.{GameSaloon, GameTable, GameTablePrivateView}
 
-  @dummy_game_id 1
-
   def join("games:" <> game_id, %{"name" => uname}, socket) do
     game_id = game_id |> String.to_integer()
     socket = assign(socket, :game_user, %{:uuid => socket.assigns.user_id, :char => uname})
@@ -50,28 +48,48 @@ defmodule CamelupWeb.GameChannel do
     :ok
   end
 
-  @spec handle_in(String.t(), any, Phoenix.Socket.t()) :: {:noreply, Phoenix.Socket.t()}
   def handle_in("decision", %{"first" => fst, "second" => snd, "third" => trd}, socket) do
     action =
-      case fst do
-        "warmup" -> :warmup
-        "start" -> :start
-        "shake" -> :shake
-        "get_leg_money" -> :get_leg_money
-        "bet_on_leg" -> :bet_on_leg
-        "get_final_winner_money" -> :get_final_winner_money
-        "get_final_looser_money" -> :get_final_looser_money
+      case {fst, snd, trd} do
+        {"warmup", _, _} ->
+          :warmup
+
+        {"start", _, _} ->
+          :start
+
+        {"shake", _, _} ->
+          :shake
+
+        {"get_leg_money", _, _} ->
+          :get_leg_money
+
+        {"bet_on_leg", color, _} ->
+          case color do
+            "black" -> {:bet_on_leg, :black}
+            "blue" -> {:bet_on_leg, :blue}
+            "green" -> {:bet_on_leg, :green}
+            "orange" -> {:bet_on_leg, :orange}
+            "red" -> {:bet_on_leg, :red}
+          end
+
+        {"get_final_winner_money", _, _} ->
+          :get_final_winner_money
+
+        {"get_final_looser_money", _, _} ->
+          :get_final_looser_money
       end
 
     [{:main, %GameSaloon{} = gs}] = :ets.lookup(:game_cache, :main)
+
     gs = gs |> GameSaloon.user_action(socket.assigns.game_user, action)
     table_id = gs |> GameSaloon.get_user_table_id(socket.assigns.game_user.uuid)
     {:ok, gt} = gs |> GameSaloon.get_table_by_id(table_id)
     gt2 = gt |> GameTablePrivateView.to_view(socket.assigns.game_user.char)
+
     broadcast!(socket, "broadcast_game_table", gt2)
 
     :ets.insert(:game_cache, {:main, gs})
 
-    {:noreply, socket}
+    {:reply, {:ok, %{}}, socket}
   end
 end

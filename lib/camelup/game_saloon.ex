@@ -52,7 +52,12 @@ defmodule CamelUp.GameSaloon do
   def user_action(%GameSaloon{} = gs, %{:uuid => _} = user, action) do
     table_id = gs |> get_user_table_id(user.uuid)
     {:ok, table} = gs |> get_table_by_id(table_id)
-    new_table = table |> GameTable.action(action)
+
+    new_table =
+      table
+      |> GameTable.action(action)
+      |> IO.inspect(label: "new table is: ")
+
     %GameSaloon{gs | tables: gs.tables |> Map.put(table_id, new_table)}
   end
 end
