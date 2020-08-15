@@ -60,4 +60,5 @@ config :camelup, CamelupWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [host: "${APP_NAME}.gigalixirapp.com", port: 443],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
-  server: true
+  server: true,
+  check_origin: ["https://camelup.now.sh", "https://camelup.zeit.sh", "//localhost"]
