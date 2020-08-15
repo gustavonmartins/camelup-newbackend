@@ -17,7 +17,7 @@ defmodule CamelupWeb.RoomChannelTest do
   end
 
   describe "Sending decisions" do
-    test "Finishes warmup", %{socket: socket} do
+    test "Finishes warmup and do stuff other than throwing dices", %{socket: socket} do
       socket |> push("decision", %{first: "warmup", second: nil, third: nil})
       socket |> push("decision", %{first: "warmup", second: nil, third: nil})
       socket |> push("decision", %{first: "warmup", second: nil, third: nil})
