@@ -41,7 +41,16 @@ defmodule CamelUp.GameSaloon do
     user_table_id = gs |> get_user_table_id(user.uuid)
     {:ok, gt} = gs |> get_table_by_id(user_table_id)
     gt = gt |> GameTable.removechar(user.char)
-    gs = %GameSaloon{gs | tables: gs.tables |> Map.replace!(user_table_id, gt)}
+
+    gs =
+      case gt.playing_chars do
+        [] ->
+          %GameSaloon{gs | tables: gs.tables |> Map.delete(user_table_id)}
+
+        _ ->
+          %GameSaloon{gs | tables: gs.tables |> Map.replace!(user_table_id, gt)}
+      end
+
     gs
   end
 

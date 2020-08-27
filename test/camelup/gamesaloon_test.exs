@@ -54,6 +54,37 @@ defmodule CamelUp.GameSaloonTest do
     end
 
     test "Tables disappears if empty" do
+      user = %{uuid: "randomuserid-xyz", char: "Mr. Brown"}
+      user2 = %{uuid: "randomuserid-2", char: "Mr. Orange"}
+      room = :rand.uniform(1000)
+
+      gs =
+        %GameSaloon{}
+        |> GameSaloon.be_joined_by_user(user, room)
+        |> GameSaloon.be_joined_by_user(user2, room)
+        |> GameSaloon.be_left_by_user(user)
+        |> GameSaloon.be_left_by_user(user2)
+
+      assert gs.tables == %{}
+    end
+
+    test "Other tables than empty dont disappear" do
+      user = %{uuid: "randomuserid-xyz", char: "Mr. Brown"}
+      user2 = %{uuid: "randomuserid-2", char: "Mr. Orange"}
+      user3 = %{uuid: "randomuserid-3", char: "Mr. Zulu"}
+
+      room = :rand.uniform(1000)
+      room2 = room + 1
+
+      gs =
+        %GameSaloon{}
+        |> GameSaloon.be_joined_by_user(user, room)
+        |> GameSaloon.be_joined_by_user(user3, room2)
+        |> GameSaloon.be_joined_by_user(user2, room)
+        |> GameSaloon.be_left_by_user(user)
+        |> GameSaloon.be_left_by_user(user2)
+
+      assert Map.keys(gs.tables) == [room2]
     end
   end
 end
