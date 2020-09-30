@@ -4,6 +4,7 @@ RUN apk add --update nodejs npm
 COPY . /app
 WORKDIR /app/assets
 RUN npm install
+RUN npm audit fix
 
 WORKDIR /app
 
